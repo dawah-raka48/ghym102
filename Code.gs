@@ -6,6 +6,7 @@ function setup(){
   const ss=SpreadsheetApp.getActiveSpreadsheet();
   if(!ss) throw new Error("اربط المشروع بجدول Google Sheets أولًا.");
   ensureSheet_(ss,CFG.USERS,["userId","name","accessCode","role","active","createdAt"]);
+  seedDefaultUsers_(ss);
   ensureSheet_(ss,CFG.TRANSFERS,["transferId","studentName","amount","period","notes","fileId","fileName","status","createdAt","createdBy","createdByName","reviewedAt","reviewedBy","reviewNotes","invoiceNumber","completedAt"]);
   ensureSheet_(ss,CFG.AUDIT,["at","userId","userName","action","transferId","details"]);
   const sh=ensureSheet_(ss,CFG.SETTINGS,["key","value"]);
@@ -16,6 +17,19 @@ function setup(){
   SpreadsheetApp.getUi().alert("تم إعداد الأوراق ومجلد الإيصالات الخاص. أضف المستخدمين في ورقة Users قبل النشر.");
 }
 function ensureSheet_(ss,name,headers){let s=ss.getSheetByName(name);if(!s)s=ss.insertSheet(name);if(s.getLastRow()===0)s.appendRow(headers);return s;}
+function seedDefaultUsers_(ss){
+  const sh=ss.getSheetByName(CFG.USERS);
+  const rows=sh.getDataRange().getValues();
+  const headers=rows[0]||[];
+  const ix=Object.fromEntries(headers.map((h,i)=>[h,i]));
+  const existing=new Set(rows.slice(1).map(r=>String(r[ix.userId]||"")));
+  const now=now_();
+  const defaults=[
+    ["ACCOUNTANT001","المحاسب العام","8360","ACCOUNTANT",true,now],
+    ["ADMINASSISTANT001","المساعدة الإدارية","4477","DATA_ENTRY",true,now]
+  ];
+  defaults.forEach(user=>{if(!existing.has(user[0]))sh.appendRow(user);});
+}
 function setSetting_(sh,key,value){const rows=sh.getDataRange().getValues();for(let i=1;i<rows.length;i++){if(rows[i][0]===key){sh.getRange(i+1,2).setValue(value);return;}}sh.appendRow([key,value]);}
 function getSetting_(key){const sh=SpreadsheetApp.getActive().getSheetByName(CFG.SETTINGS);if(!sh)throw new Error("شغّل setup() أولًا");const rows=sh.getDataRange().getValues();for(let i=1;i<rows.length;i++)if(rows[i][0]===key)return String(rows[i][1]||"");return "";}
 function doGet(){return json_({ok:true,service:"Ghaym Student Transfers API",message:"Use POST actions with a valid access code/session."});}
