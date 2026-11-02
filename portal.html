@@ -11,7 +11,7 @@
   <a class="brand" href="./" aria-label="بوابة مركز غيم">
     <span class="mark"><span>غ</span><i></i></span><span><strong>مركز غيم</strong><small>لضيافة الأطفال · البوابة الإلكترونية</small></span>
   </a>
-  <div class="datetime"><div class="clock-face">◷</div><div><strong id="liveClock">--:--</strong><small id="liveDate">جارٍ تحميل التاريخ...</small></div></div>
+  <div class="datetime date-pill"><div class="clock-face">▦</div><div><strong id="liveDay">--</strong><small id="liveDate">جارٍ تحميل التاريخ...</small></div></div><div class="datetime clock-pill"><div><strong id="liveClock">--:--</strong><small>بتوقيت السعودية</small></div><div class="clock-face">◷</div></div>
 </header>
 <main>
   <section class="hero"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-content">
@@ -41,11 +41,11 @@
 <footer><span class="footer-brand"><b>غ</b> مركز غيم © <span id="year"></span></span><span>معًا نصنع بيئة آمنة لنمو أطفالنا <i>✦</i></span></footer>
 <script>
 const clockEl=document.getElementById("liveClock");
-const dateEl=document.getElementById("liveDate");
+const dateEl=document.getElementById("liveDate");\nconst dayEl=document.getElementById("liveDay");
 function updateClock(){
  const now=new Date();
  clockEl.textContent=new Intl.DateTimeFormat("ar-SA",{hour:"2-digit",minute:"2-digit",hour12:true,timeZone:"Asia/Riyadh"}).format(now);
- dateEl.textContent=new Intl.DateTimeFormat("ar-SA-u-ca-gregory",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Riyadh"}).format(now);
+ dayEl.textContent=new Intl.DateTimeFormat("ar-SA",{weekday:"long",timeZone:"Asia/Riyadh"}).format(now);\n dateEl.textContent=new Intl.DateTimeFormat("ar-SA-u-ca-gregory",{day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Riyadh"}).format(now);
 }
 updateClock();setInterval(updateClock,30000);
 document.getElementById("year").textContent=new Date().getFullYear();
