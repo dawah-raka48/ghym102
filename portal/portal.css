@@ -76,3 +76,9 @@ footer{max-width:1200px;margin:0 auto;padding:15px 22px 20px;border-top:1px soli
  .clock-pill small{font-size:9px}
 }
 @media(max-width:390px){.date-pill,.clock-pill{padding:7px 8px;gap:6px}.date-pill .clock-face,.clock-pill .clock-face{width:28px;height:28px;flex-basis:28px;font-size:18px}.date-pill strong{font-size:14px}.clock-pill strong{font-size:19px}}
+
+
+/* User-provided portal background image */
+body{background-image:linear-gradient(180deg,rgba(224,243,255,.78) 0%,rgba(248,251,255,.82) 48%,rgba(255,247,230,.84) 100%),url('https://raw.githubusercontent.com/dawah-raka48/ghym102/main/lol.png');background-size:cover,cover;background-position:center,center;background-attachment:fixed,fixed;background-repeat:no-repeat}
+body:before{background-image:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,250,239,.16));opacity:1}
+@media(max-width:760px){body{background-attachment:scroll,scroll;background-position:center,center}}
