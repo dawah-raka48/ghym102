@@ -8,7 +8,46 @@ function money(v){return new Intl.NumberFormat("ar-SA",{style:"currency",currenc
 function today(){return new Date().toLocaleDateString("ar-SA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});}
 function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),3200);}
 function statusTag(s){const cls={PENDING:"pending",ACCEPTED:"accepted",INVOICE_PENDING:"invoice",COMPLETED:"done",RETURNED:"returned",REJECTED:"rejected"}[s]||"pending";return '<span class="status '+cls+'">'+esc(statuses[s]||s)+'</span>';}
-async function api(action,data={}){if(!API_URL){$("configNotice").classList.remove("hidden");throw new Error("يلزم إعداد رابط النظام أولًا");}const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,token:state.token,...data})});const j=await r.json();if(!j.ok)throw new Error(j.error||"تعذر تنفيذ الطلب");return j;}
+const DEMO_MODE = !API_URL;
+const demo = {
+  transfers: [
+    {transferId:"DEMO-1001",studentName:"طالب تجريبي - أحمد محمد",amount:850,period:"الفصل الأول 2026",notes:"بيانات تجريبية للمعاينة فقط",status:"PENDING",createdAt:today(),createdBy:"ADMINASSISTANT001",createdByName:"المساعدة الإدارية",reviewNotes:"",invoiceNumber:""},
+    {transferId:"DEMO-1002",studentName:"طالبة تجريبية - سارة علي",amount:1200,period:"سبتمبر 2026",notes:"بيانات تجريبية للمعاينة فقط",status:"ACCEPTED",createdAt:today(),createdBy:"ADMINASSISTANT001",createdByName:"المساعدة الإدارية",reviewNotes:"تمت مطابقة التحويل",invoiceNumber:""}
+  ],
+  audit: []
+};
+async function api(action,data={}){
+  if(DEMO_MODE){
+    $("configNotice").classList.remove("hidden");
+    $("configNotice").textContent="وضع معاينة فقط: البيانات تجريبية ولا تُحفظ على خادم أو Google Sheets.";
+    if(action==="login"){
+      const users={"8360":{userId:"ACCOUNTANT001",name:"المحاسب العام",role:"ACCOUNTANT"},"4477":{userId:"ADMINASSISTANT001",name:"المساعدة الإدارية",role:"DATA_ENTRY"}};
+      const user=users[String(data.accessCode||"").trim()];
+      if(!user)throw new Error("رمز الدخول غير صحيح");
+      state.user=user;state.token="demo-session";
+      demo.audit.unshift({at:today(),userName:user.name,action:"تسجيل دخول (تجريبي)",transferId:"",details:"وضع المعاينة"});
+      return {ok:true,token:state.token,user};
+    }
+    if(action==="logout")return {ok:true};
+    if(action==="listTransfers")return {ok:true,transfers:demo.transfers.filter(t=>state.user?.role==="ACCOUNTANT"||t.createdBy===state.user?.userId)};
+    if(action==="listAudit")return {ok:true,events:demo.audit};
+    if(action==="createTransfer"){
+      if(state.user?.role!=="DATA_ENTRY")throw new Error("رفع التحويلات متاح للمساعدة الإدارية فقط");
+      const t={transferId:"DEMO-"+(1003+demo.transfers.length),studentName:data.studentName,amount:Number(data.amount),period:data.period,notes:data.notes||"",status:"PENDING",createdAt:today(),createdBy:state.user.userId,createdByName:state.user.name,reviewNotes:"",invoiceNumber:"",demoFileName:data.fileName||"receipt.pdf"};
+      demo.transfers.unshift(t);demo.audit.unshift({at:today(),userName:state.user.name,action:"إضافة تحويل (تجريبي)",transferId:t.transferId,details:"لا يوجد حفظ دائم"});return {ok:true,transferId:t.transferId,status:"PENDING"};
+    }
+    if(action==="updateStatus"){
+      if(state.user?.role!=="ACCOUNTANT")throw new Error("هذه العملية متاحة للمحاسب العام فقط");
+      const t=demo.transfers.find(x=>x.transferId===data.transferId);if(!t)throw new Error("لم يتم العثور على التحويل");
+      if(data.status==="COMPLETED"&&!String(data.invoiceNumber||"").trim())throw new Error("رقم الفاتورة مطلوب قبل التأكيد");
+      t.status=data.status;t.invoiceNumber=data.invoiceNumber||t.invoiceNumber;t.reviewNotes=data.reviewNotes||"";demo.audit.unshift({at:today(),userName:state.user.name,action:"تحديث حالة (تجريبي)",transferId:t.transferId,details:t.status});return {ok:true,status:t.status};
+    }
+    if(action==="getReceipt")throw new Error("الإيصالات غير متاحة في وضع المعاينة؛ اربط الخادم لاختبار الملفات.");
+    throw new Error("الإجراء غير معروف");
+  }
+  const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action,token:state.token,...data})});
+  const j=await r.json();if(!j.ok)throw new Error(j.error||"تعذر تنفيذ الطلب");return j;
+}
 function showLogin(){ $("loginView").classList.remove("hidden");$("dashboardView").classList.add("hidden");$("logoutBtn").classList.add("hidden");state.token="";state.user=null;}
 function renderStats(){const all=state.transfers;const total=all.reduce((a,t)=>a+Number(t.amount||0),0);const pending=all.filter(t=>t.status==="PENDING").length;const invoiced=all.filter(t=>t.status==="COMPLETED").length;const cards=[["إجمالي التحويلات",all.length],["إجمالي المبالغ",money(total)],["قيد المراجعة",pending],["فواتير مؤكدة",invoiced]];$("statsGrid").innerHTML=cards.map(([l,v])=>'<article class="stat-card"><span>'+l+'</span><b>'+esc(v)+'</b><small>حسب صلاحيتك</small></article>').join("");}
 function actions(){const isAcc=state.user.role==="ACCOUNTANT";const list=isAcc?[["review","مراجعة التحويلات","مراجعة الإيصالات وتحديث الحالة","✓"],["reports","التقارير","ملخصات المبالغ والحالات","▤"],["audit","سجل التدقيق","متابعة التغييرات والإجراءات","◷"]]:[["new","رفع تحويل جديد","إدخال بيانات الطالب وإيصال PDF","＋"],["mine","تحويلاتي","متابعة الطلبات التي رفعتها","▤"],["reports","تقاريري","تقرير عملياتك ومبالغها","◷"]];$("actionGrid").innerHTML=list.map(([v,t,d,i])=>'<button class="action-card" data-view="'+v+'"><span class="action-icon">'+i+'</span><b>'+t+'</b><small>'+d+'</small></button>').join("");}
