@@ -1,5 +1,5 @@
 /* Transfer portal frontend. Set API_URL after deploying Code.gs. */
-const API_URL = "";
+const API_URL = "https://script.google.com/macros/s/AKfycbz-wChA5irsqcVjnGw_2G8aAadrEpCKwfQqHW0DkFuGHPGLpJAHZTWNhE12rUS21STHjQ/exec";
 const $ = (id) => document.getElementById(id);
 const state = { token:"", user:null, transfers:[], view:"", filters:{status:"",query:""} };
 const statuses = { PENDING:"قيد المراجعة", ACCEPTED:"تم التأكد من التحويل", INVOICE_PENDING:"بانتظار إصدار الفاتورة", COMPLETED:"تم التأكد من الفاتورة", RETURNED:"معاد للتصحيح", REJECTED:"مرفوض" };
