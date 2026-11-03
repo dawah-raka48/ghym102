@@ -34,3 +34,11 @@ footer{padding:23px max(28px,calc((100vw - 1380px)/2));font-size:11px;color:#8b9
 #loginView .login-emblem{width:88px;height:88px}
 #loginView .login-card h2{font-size:27px;margin-top:20px}
 @media(max-width:700px){#loginView.login-layout{min-height:calc(100vh - 190px);padding:18px 0}#loginView .login-card{width:100%;padding:30px 23px;border-radius:23px}}
+
+/* Login background artwork */
+body:has(#loginView:not(.hidden)){background-image:linear-gradient(180deg,rgba(239,247,251,.22),rgba(255,250,239,.28)),url("lon.png");background-position:center center;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}
+body:has(#loginView:not(.hidden)) .app-shell{background:transparent}
+body:has(#loginView:not(.hidden)) .topbar{background:rgba(255,255,255,.24);backdrop-filter:blur(12px);border-bottom-color:rgba(255,255,255,.38)}
+body:has(#loginView:not(.hidden)) footer{background:rgba(255,255,255,.22);backdrop-filter:blur(10px);border-top-color:rgba(255,255,255,.38)}
+body:has(#loginView:not(.hidden)) #loginView .login-card{background:rgba(255,255,255,.76);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-color:rgba(255,255,255,.82);box-shadow:0 24px 70px rgba(15,55,75,.17)}
+@media(max-width:700px){body:has(#loginView:not(.hidden)){background-attachment:scroll;background-position:center top}}
