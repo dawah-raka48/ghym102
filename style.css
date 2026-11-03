@@ -27,3 +27,10 @@ footer{padding:23px max(28px,calc((100vw - 1380px)/2));font-size:11px;color:#8b9
 
 /* Accountant-only edit/delete controls */
 .row-actions{gap:6px;flex-wrap:nowrap}.icon-action{width:34px;height:32px;display:inline-grid;place-items:center;padding:0;font-size:17px;line-height:1}.edit-action{color:#176b78!important;border-color:#c9e3e7!important;background:#f2fbfc!important}.delete-action{color:#ad3434!important;border-color:#f0d0d0!important;background:#fff6f5!important}.edit-action:hover{background:#dff5f5!important}.delete-action:hover{background:#ffe7e5!important}
+
+/* Login screen: centered card only */
+#loginView.login-layout{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 230px);gap:0;padding:32px 0}
+#loginView .login-card{width:min(100%,440px);max-width:440px;justify-self:auto;margin:0;padding:42px 38px;border-radius:28px;background:rgba(255,255,255,.94);box-shadow:0 28px 80px rgba(17,57,75,.13);border:1px solid rgba(255,255,255,.95)}
+#loginView .login-emblem{width:88px;height:88px}
+#loginView .login-card h2{font-size:27px;margin-top:20px}
+@media(max-width:700px){#loginView.login-layout{min-height:calc(100vh - 190px);padding:18px 0}#loginView .login-card{width:100%;padding:30px 23px;border-radius:23px}}
