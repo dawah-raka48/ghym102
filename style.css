@@ -42,3 +42,13 @@ body:has(#loginView:not(.hidden)) .topbar{background:rgba(255,255,255,.24);backd
 body:has(#loginView:not(.hidden)) footer{background:rgba(255,255,255,.22);backdrop-filter:blur(10px);border-top-color:rgba(255,255,255,.38)}
 body:has(#loginView:not(.hidden)) #loginView .login-card{background:rgba(255,255,255,.76);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-color:rgba(255,255,255,.82);box-shadow:0 24px 70px rgba(15,55,75,.17)}
 @media(max-width:700px){body:has(#loginView:not(.hidden)){background-attachment:scroll;background-position:center top}}
+
+/* Interior dashboard background artwork after sign-in */
+body:has(#dashboardView:not(.hidden)){background-image:linear-gradient(180deg,rgba(242,249,252,.60),rgba(255,250,240,.70)),url("ooo.png");background-position:center center;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}
+body:has(#dashboardView:not(.hidden)) .app-shell{background:transparent}
+body:has(#dashboardView:not(.hidden)) .panel,
+body:has(#dashboardView:not(.hidden)) .stat-card,
+body:has(#dashboardView:not(.hidden)) .action-card{background-color:rgba(255,255,255,.80);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:rgba(255,255,255,.78)}
+body:has(#dashboardView:not(.hidden)) .table-wrap{background:rgba(255,255,255,.88)}
+body:has(#dashboardView:not(.hidden)) footer{background:rgba(255,255,255,.35);backdrop-filter:blur(10px)}
+@media(max-width:700px){body:has(#dashboardView:not(.hidden)){background-attachment:scroll;background-position:center top}}
