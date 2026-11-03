@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="app-shell">
-<header class="topbar"><a class="brand" href="./"><span class="brand-mark">غ</span><span><b>مركز غيم</b><small>تحويلات رسوم الطلاب</small></span></a><div class="top-actions"><span id="today"></span><button id="logoutBtn" class="btn ghost hidden">تسجيل الخروج</button></div></header>
+
 <main>
 <section id="configNotice" class="notice hidden">لم يتم ربط الخادم بعد. اتبع تعليمات README.md لإعداد Google Apps Script ثم ضع رابط /exec في app.js.</section>
 <section id="loginView" class="login-layout">
@@ -15,7 +15,7 @@
 <form id="loginForm" class="panel login-card"><div class="login-emblem" aria-hidden="true"><span class="login-lock">♙</span><span class="login-emblem-dot">✓</span></div><h2>تسجيل الدخول</h2><p class="muted">أدخل رمز الدخول المخصص لك</p><label for="accessCode">رمز الدخول</label><input id="accessCode" class="access-code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" required placeholder="••••" type="password"><button class="btn primary full" type="submit">دخول إلى النظام <span>←</span></button><p id="loginError" class="error" role="alert"></p><p class="tiny muted">لا تشارك رمزك مع أي شخص آخر.</p></form>
 </section>
 <section id="dashboardView" class="hidden">
-<div class="page-heading"><div><span class="eyebrow">لوحة التحكم</span><h1 id="welcomeTitle">أهلًا بك</h1><p class="muted" id="welcomeSub">متابعة تحويلات رسوم الطلاب</p></div><span id="roleBadge" class="role-badge">موظف</span></div>
+<div class="page-heading"><div><span class="eyebrow">لوحة التحكم</span><h1 id="welcomeTitle">أهلًا بك</h1><p class="muted" id="welcomeSub">متابعة تحويلات رسوم الطلاب</p></div><div class="page-heading-actions"><span id="roleBadge" class="role-badge">موظف</span><button id="logoutBtn" class="btn ghost hidden">تسجيل الخروج</button></div></div>
 <div id="statsGrid" class="stats-grid"></div>
 <div id="actionGrid" class="action-grid"></div>
 <section id="contentPanel" class="panel content-panel hidden"><div class="section-heading"><div><span class="eyebrow">مركز غيم</span><h2 id="contentTitle">التحويلات</h2></div><button id="backBtn" class="btn ghost">العودة</button></div><div id="contentBody"></div></section>
