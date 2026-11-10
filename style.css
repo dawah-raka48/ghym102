@@ -159,3 +159,6 @@ body:has(#loginView:not(.hidden)) footer{display:none!important}
 #loginView .otp-footnote{margin:20px 0 0;color:#8592ac!important;font-size:10px!important}#loginView .otp-footnote span{color:#40c9a9;margin-left:6px}
 @media(max-width:560px){#loginView.otp-login-stage{padding:18px 13px}.otp-login-card{padding:32px 21px 27px!important;border-radius:27px!important}.otp-slots{gap:9px;padding:11px}.otp-digit{width:clamp(48px,15vw,65px);height:66px;font-size:27px}.otp-lock-visual{transform:scale(.9);margin-bottom:15px}.otp-login-brand{margin-bottom:20px}}
 @media(prefers-reduced-motion:no-preference){.otp-lock-visual .otp-shackle{animation:otpGlow 3.2s ease-in-out infinite alternate}@keyframes otpGlow{from{filter:drop-shadow(0 0 4px rgba(123,146,204,.18))}to{filter:drop-shadow(0 0 13px rgba(48,211,185,.42))}}}
+
+/* Keep navigation shortcuts in the right sidebar only; remove duplicate center cards */
+#dashboardView #actionGrid{display:none!important}
