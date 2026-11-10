@@ -16,10 +16,12 @@
 <div class="otp-lock-visual" aria-hidden="true"><span class="otp-shackle"></span><span class="otp-lock-body">♙</span><i></i></div>
 <h2>تسجيل الدخول</h2>
 <p class="otp-intro">أدخل رمز الدخول المخصص لك</p>
-<label class="otp-label" for="otpMaster">رمز الدخول</label>
-<div class="otp-slots otp-single-input" dir="ltr" id="otpSlots" role="group" aria-label="أدخل رمز الدخول المكون من أربعة أرقام">
-<div class="otp-cell" id="otpBox1"></div><div class="otp-cell" id="otpBox2"></div><div class="otp-cell" id="otpBox3"></div><div class="otp-cell" id="otpBox4"></div>
-<input id="otpMaster" class="otp-master" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="رمز الدخول من أربعة أرقام" autofocus>
+<label class="otp-label" for="otpDigit1">رمز الدخول</label>
+<div class="otp-slots" dir="ltr" id="otpSlots" role="group" aria-label="أدخل رمز الدخول المكون من أربعة أرقام">
+<input class="otp-digit" id="otpDigit1" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="الرقم الأول" autofocus>
+<input class="otp-digit" id="otpDigit2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="الرقم الثاني">
+<input class="otp-digit" id="otpDigit3" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="الرقم الثالث">
+<input class="otp-digit" id="otpDigit4" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="off" aria-label="الرقم الرابع">
 </div>
 <input id="accessCode" class="otp-source-input" inputmode="numeric" autocomplete="off" maxlength="4" tabindex="-1" aria-hidden="true">
 <p id="otpStatus" class="otp-status" aria-live="polite">أدخل الأرقام الأربعة للمتابعة</p>
@@ -37,5 +39,5 @@
 </section>
 </main></div><footer><span>مركز غيم © <span id="year"></span></span><span>نظام تحويلات رسوم الطلاب</span></footer>
 </div><div id="toast" class="toast" role="status"></div>
-<script src="app.js?v=otp-single-20261110-3"></script>
+<script src="app.js?v=otp-box-input-20261110-4"></script>
 </body></html>
