@@ -310,3 +310,13 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
 #loginView .otp-source-input{display:none!important}
 #loginView .otp-login-card.otp-error-shake{animation:otp-shake .38s ease!important}
 #loginView .otp-error{display:block!important;min-height:18px!important}
+
+/* Single real password input drives the four visual OTP cells: no focus hopping can fail */
+#loginView .otp-single-input{position:relative;cursor:text;display:flex;gap:13px;justify-content:center}
+#loginView .otp-cell{width:68px;height:75px;min-width:0;display:grid;place-items:center;border-radius:15px;border:1px solid rgba(137,153,190,.26);background:linear-gradient(145deg,#101729,#080d18);color:#f7fbff;font-size:28px;font-weight:900;box-shadow:inset 0 3px 8px rgba(0,0,0,.42),0 3px 7px rgba(0,0,0,.2);transition:border-color .2s,box-shadow .2s,transform .2s;pointer-events:none}
+#loginView .otp-cell.filled{border-color:rgba(45,202,170,.65);color:#43d4b5;box-shadow:0 0 14px rgba(25,191,160,.13),inset 0 3px 8px rgba(0,0,0,.4)}
+#loginView .otp-cell.otp-invalid{border-color:#ed6d7b;box-shadow:0 0 0 2px rgba(237,109,123,.22),0 0 18px rgba(237,109,123,.2)}
+#loginView .otp-master{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:.012!important;z-index:5!important;border:0!important;padding:0!important;margin:0!important;cursor:text!important;background:transparent!important;color:transparent!important;caret-color:transparent!important;letter-spacing:0!important}
+#loginView .otp-master:focus{outline:0!important;box-shadow:none!important}
+#loginView .otp-single-input.has-focus .otp-cell:first-of-type{border-color:#e5bd63;box-shadow:0 0 0 2px rgba(229,189,99,.2),0 0 18px rgba(229,189,99,.25),inset 0 3px 8px rgba(0,0,0,.4)}
+@media(max-width:560px){#loginView .otp-single-input{gap:9px}#loginView .otp-cell{width:clamp(48px,15vw,65px);height:66px}}
