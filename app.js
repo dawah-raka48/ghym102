@@ -112,7 +112,7 @@ function exportPdf(){
 html,body{margin:0;padding:0;background:#fff;color:var(--deep);font-family:"Almarai",Tahoma,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body{font-size:10px;line-height:1.55}.sheet{width:100%;margin:0 auto}
 .masthead{display:flex;align-items:center;justify-content:space-between;padding:0 0 11px;border-bottom:3px solid var(--gold)}
-.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#0a9e99,#07516a);color:#fff;display:grid;place-items:center;font-size:27px;font-weight:900;box-shadow:0 4px 12px #0a687322}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:45px;height:45px;border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden;border:1px solid #e1eaed;box-shadow:0 4px 12px #0a687322}.pdf-brand-mark img{width:100%;height:100%;object-fit:contain;padding:4px}
 .brand-name{font-size:19px;font-weight:900;color:var(--teal)}.brand-sub{font-size:9px;color:#a27a2c;font-weight:700;margin-top:2px}
 .meta{text-align:left;color:var(--muted);font-size:9px;line-height:1.9}.meta b{color:var(--deep)}
 .heading{text-align:center;padding:11px 0 8px}.heading h1{font-size:18px;margin:0;color:var(--deep);font-weight:900}.heading p{font-size:9px;color:var(--muted);margin:4px 0 0}
@@ -135,7 +135,7 @@ tfoot th{background:#0b4f59;font-size:10px;padding:9px 7px}.empty{padding:26px;t
 .footer{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:7px;color:#8295a0;font-size:8px}
 @media print{.no-print{display:none!important}thead{display:table-header-group}tr{break-inside:avoid}}
 </style></head><body><main class="sheet">
-<header class="masthead"><div class="brand"><div class="brand-mark">غ</div><div><div class="brand-name">مركز غيم لضيافة الأطفال</div><div class="brand-sub">GHAYM CENTER · FINANCE</div></div></div><div class="meta"><b>تاريخ إصدار التقرير:</b> ${esc(date)}<br><b>وقت الإصدار:</b> ${esc(issuedAt)}<br><b>الفترة:</b> ${esc(from||"من البداية")} — ${esc(to||"حتى الآن")}<br><b>نوع التقرير:</b> ${esc(s?(statuses[s]||s):"جميع الحالات")}</div></header>
+<header class="masthead"><div class="brand"><div class="brand-mark pdf-brand-mark"><img src="m2h.png" alt="شعار مركز غيم"></div><div><div class="brand-name">مركز غيم لضيافة الأطفال</div><div class="brand-sub">GHAYM CENTER · FINANCE</div></div></div><div class="meta"><b>تاريخ إصدار التقرير:</b> ${esc(date)}<br><b>وقت الإصدار:</b> ${esc(issuedAt)}<br><b>الفترة:</b> ${esc(from||"من البداية")} — ${esc(to||"حتى الآن")}<br><b>نوع التقرير:</b> ${esc(s?(statuses[s]||s):"جميع الحالات")}</div></header>
 <section class="heading"><h1>تقرير تحويلات رسوم الطلاب</h1><p>ملخص العمليات المالية المسجلة ومتابعة حالة التحويلات والفواتير</p></section>
 <section class="stats"><div class="stat"><span>إجمالي العمليات</span><b>${items.length}</b></div><div class="stat"><span>إجمالي المبالغ</span><b>${esc(money(total))}</b></div><div class="stat"><span>قيد المراجعة</span><b>${pending}</b></div><div class="stat"><span>فواتير مؤكدة</span><b>${completed}</b></div></section>
 <div class="table-title"><b>تفاصيل التحويلات</b><span>عدد السجلات: ${items.length}</span></div>
