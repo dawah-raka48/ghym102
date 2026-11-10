@@ -28,7 +28,7 @@ async function api(action,data={}){
 }
 function saveSession(){try{sessionStorage.setItem("ghaymPortalSession",JSON.stringify({token:state.token,user:state.user}));}catch(_){}}
 function clearSession(){try{sessionStorage.removeItem("ghaymPortalSession");}catch(_){}}
-function clearOtpFields(){otpDigits.forEach(x=>{x.value="";x.classList.remove("filled","otp-invalid");});$("accessCode").value="";$("otpStatus").textContent="أدخل الأرقام الأربعة للمتابعة";$("loginError").textContent="";$("loginForm").classList.remove("otp-unlock","otp-error-shake");}\nfunction showLogin(){ $("loginView").classList.remove("hidden");$("dashboardView").classList.add("hidden");$("logoutBtn").classList.add("hidden");state.token="";state.user=null;clearSession();clearOtpFields();otpDigits[0].focus();}
+function clearOtpFields(){otpDigits.forEach(x=>{x.value="";x.classList.remove("filled","otp-invalid");});$("accessCode").value="";$("otpStatus").textContent="أدخل الأرقام الأربعة للمتابعة";$("loginError").textContent="";$("loginForm").classList.remove("otp-unlock","otp-error-shake");}\nfunction showLogin(){ $("loginView").classList.remove("hidden");$("dashboardView").classList.add("hidden");$("logoutBtn").classList.add("hidden");state.token="";state.user=null;clearSession();clearOtpFields();focusOtp();}
 function showDashboard(user){clearOtpFields();state.user=user;$("loginView").classList.add("hidden");$("dashboardView").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");$("welcomeTitle").textContent="أهلًا، "+state.user.name;$("welcomeSub").textContent=state.user.role==="ACCOUNTANT"?"مراجعة التحويلات وتأكيد الفواتير":"رفع التحويلات ومتابعة حالتها";$("roleBadge").textContent=state.user.role==="ACCOUNTANT"?"المحاسب العام":"موظف إدخال البيانات";actions();}
 function renderStats(){const all=state.transfers;const total=all.reduce((a,t)=>a+Number(t.amount||0),0);const pending=all.filter(t=>t.status==="PENDING").length;const invoiced=all.filter(t=>t.status==="COMPLETED").length;const cards=[["إجمالي التحويلات",all.length],["إجمالي المبالغ",money(total)],["قيد المراجعة",pending],["فواتير مؤكدة",invoiced]];$("statsGrid").innerHTML=cards.map(([l,v])=>'<article class="stat-card"><span>'+l+'</span><b>'+esc(v)+'</b><small>حسب صلاحيتك</small></article>').join("");}
 function actions(){const isAcc=state.user.role==="ACCOUNTANT";const list=isAcc?[["review","مراجعة التحويلات","مراجعة الإيصالات وتحديث الحالة","✓"],["reports","التقارير الأسبوعية","تقرير أسبوعي للتحويلات والمبالغ والحالات بصيغة PDF","▤"],["audit","سجل التدقيق","متابعة التغييرات والإجراءات","◷"]]:[["new","رفع تحويل جديد","إدخال بيانات الطالب وإيصال PDF","＋"],["mine","تحويلاتي","متابعة الطلبات التي رفعتها","▤"],["reports","التقارير الأسبوعية","تقرير أسبوعي لعملياتك ومبالغها بصيغة PDF","◷"]];$("actionGrid").innerHTML=list.map(([v,t,d,i])=>'<button class="action-card" data-view="'+v+'"><span class="action-icon">'+i+'</span><b>'+t+'</b><small>'+d+'</small></button>').join("");const icons={review:"▤",reports:"▥",audit:"◷",new:"＋",mine:"▣"};$("sidebarNav").innerHTML='<button class="sidebar-link active" data-home><span class="sidebar-link-icon">⌂</span><span>الرئيسية</span></button>'+list.map(([v,t])=>'<button class="sidebar-link" data-view="'+v+'"><span class="sidebar-link-icon">'+icons[v]+'</span><span>'+t+'</span></button>').join("");$("topUserName").textContent=state.user.name;$("topUserRole").textContent=isAcc?"المحاسب العام":"المساعدة الإدارية";}
@@ -67,30 +67,32 @@ function exportPdf(){
  win.document.close();
 }
 
-const otpDigits=[1,2,3,4].map(n=>$("otpDigit"+n));
+const otpMaster=$("otpMaster");
+const otpBoxes=[1,2,3,4].map(n=>$("otpBox"+n));
 let otpSubmitting=false;
 function syncOtp(){
- const code=otpDigits.map(x=>x.value).join("");
+ const code=otpMaster.value.replace(/[^0-9]/g,"").slice(0,4);
+ otpMaster.value=code;
  $("accessCode").value=code;
+ otpBoxes.forEach((box,i)=>{
+  box.textContent=code[i]?"●":"";
+  box.classList.toggle("filled",!!code[i]);
+ });
+ $("otpSlots").classList.toggle("has-focus",document.activeElement===otpMaster);
  $("otpStatus").textContent=code.length===4?"جاري فتح القفل…":"أدخل الأرقام الأربعة للمتابعة";
- otpDigits.forEach(el=>el.classList.toggle("filled",!!el.value));
 }
-function focusOtp(index){
- const target=otpDigits[index];
- if(!target)return;
- target.focus();
- try{target.setSelectionRange(target.value.length,target.value.length);}catch(_){}
-}
+function focusOtp(){otpMaster.focus();}
 function clearOtpFields(){
- otpDigits.forEach(x=>{x.value="";x.classList.remove("filled","otp-invalid");});
+ otpMaster.value="";
  $("accessCode").value="";
+ otpBoxes.forEach(box=>{box.textContent="";box.classList.remove("filled");});
  $("otpStatus").textContent="أدخل الأرقام الأربعة للمتابعة";
  $("loginError").textContent="";
  $("loginForm").classList.remove("otp-unlock","otp-error-shake");
 }
 async function submitOtpLogin(){
  if(otpSubmitting)return;
- const code=otpDigits.map(x=>x.value).join("");
+ const code=otpMaster.value;
  if(!/^[0-9]{4}$/.test(code))return;
  otpSubmitting=true;
  const card=$("loginForm");
@@ -109,37 +111,20 @@ async function submitOtpLogin(){
   card.classList.add("otp-error-shake");
   $("loginError").textContent=err.message||"رمز الدخول غير صحيح";
   $("otpStatus").textContent="الرمز غير صحيح، حاول مرة أخرى";
-  otpDigits.forEach(x=>x.classList.add("otp-invalid"));
-  setTimeout(()=>{clearOtpFields();card.classList.remove("otp-error-shake");focusOtp(0);},650);
+  otpBoxes.forEach(box=>box.classList.add("otp-invalid"));
+  setTimeout(()=>{clearOtpFields();otpBoxes.forEach(box=>box.classList.remove("otp-invalid"));card.classList.remove("otp-error-shake");focusOtp();},650);
  }finally{otpSubmitting=false;}
 }
-otpDigits.forEach((el,index)=>{
- el.addEventListener("input",()=>{
-  const digits=el.value.replace(/[^0-9]/g,"");
-  el.value=digits.slice(-1);
-  syncOtp();
-  if(el.value&&index<3)focusOtp(index+1);
-  if(otpDigits.every(x=>x.value))submitOtpLogin();
- });
- el.addEventListener("keydown",e=>{
-  if(e.key==="Backspace"){
-   if(el.value){el.value="";syncOtp();}
-   else if(index>0){otpDigits[index-1].value="";syncOtp();focusOtp(index-1);}
-   e.preventDefault();return;
-  }
-  if(e.key==="ArrowLeft"&&index<3){e.preventDefault();focusOtp(index+1);}
-  if(e.key==="ArrowRight"&&index>0){e.preventDefault();focusOtp(index-1);}
-  if(e.key==="Enter"){e.preventDefault();submitOtpLogin();}
- });
- el.addEventListener("paste",e=>{
-  const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/[^0-9]/g,"").slice(0,4);
-  if(!pasted)return;
-  e.preventDefault();
-  otpDigits.forEach((input,i)=>input.value=pasted[i]||"");
-  syncOtp();
-  if(pasted.length===4)submitOtpLogin();else focusOtp(pasted.length);
- });
+otpMaster.addEventListener("input",()=>{
+ syncOtp();
+ if(otpMaster.value.length===4)submitOtpLogin();
 });
+otpMaster.addEventListener("keydown",e=>{
+ if(e.key==="Enter"){e.preventDefault();submitOtpLogin();}
+});
+otpMaster.addEventListener("blur",()=>$("otpSlots").classList.remove("has-focus"));
+otpMaster.addEventListener("focus",()=>$("otpSlots").classList.add("has-focus"));
+$("otpSlots").addEventListener("click",focusOtp);
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();submitOtpLogin();});
 document.addEventListener("click",e=>{const home=e.target.closest("[data-home]");if(home){$("contentPanel").classList.add("hidden");state.view="";document.querySelectorAll(".sidebar-link").forEach(x=>x.classList.remove("active"));home.classList.add("active");}const v=e.target.closest("[data-view]");if(v){openView(v.dataset.view);document.querySelectorAll(".sidebar-link").forEach(x=>x.classList.toggle("active",x===v));}const d=e.target.closest("[data-detail]");if(d)showDetail(d.dataset.detail);const rv=e.target.closest("[data-review]");if(rv){const t=state.transfers.find(x=>x.transferId===rv.dataset.review);if(t)showDetail(t.transferId).then(()=>reviewActions(t));}const ed=e.target.closest("[data-edit]");if(ed)editTransfer(ed.dataset.edit);const er=e.target.closest("[data-edit-returned]");if(er)editReturnedTransfer(er.dataset.editReturned);const del=e.target.closest("[data-delete]");if(del)deleteTransfer(del.dataset.delete);});
 $("backBtn").onclick=()=>{$("contentPanel").classList.add("hidden");state.view="";};$("refreshBtn").onclick=()=>loadTransfers().then(()=>toast("تم تحديث البيانات")).catch(e=>toast(e.message));$("logoutBtn").onclick=async()=>{try{await api("logout")}catch(_){}showLogin();$("accessCode").value="";toast("تم تسجيل الخروج");};
