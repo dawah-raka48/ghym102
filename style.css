@@ -377,3 +377,31 @@ td{font-weight:500}
 .stat-card b{font-variant-numeric:tabular-nums}
 .btn{font-weight:600;letter-spacing:0}
 input,select,textarea{font-weight:500}
+
+
+/* Homepage analytics charts */
+.analytics-section{margin:4px 0 24px}
+.analytics-heading{margin:0 0 16px}
+.analytics-heading h2{margin:5px 0;font-size:21px;color:#123648}
+.analytics-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:16px}
+.analytics-card{padding:23px 24px;border-radius:20px;min-width:0}
+.analytics-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+.analytics-card-head h3{margin:0 0 5px;font-size:15px;color:#173b4d}
+.analytics-card-head p{margin:0;color:#8797a4;font-size:11px}
+.analytics-icon{width:37px;height:37px;border-radius:12px;background:#e8f4f2;color:#08786d;display:grid;place-items:center;font-size:20px}
+.donut-wrap{display:flex;align-items:center;justify-content:space-around;gap:22px;min-height:220px}
+.donut-chart{width:190px;height:190px;flex:0 0 190px;border-radius:50%;display:grid;place-items:center;position:relative}
+.donut-hole{width:124px;height:124px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #edf1f4}
+.donut-hole b{font-size:29px;color:#123b4c;line-height:1.2}.donut-hole small{font-size:10px;color:#8b9aa5;margin-top:5px}
+.chart-legend{display:grid;gap:12px;min-width:175px;flex:1}
+.legend-item{display:grid;grid-template-columns:9px 1fr auto;align-items:center;gap:8px;font-size:11px;color:#687f8d}
+.legend-item b{font-size:12px;color:#173b4d}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.status-bars{display:grid;gap:17px;padding:12px 0}
+.bar-label{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#687f8d;margin-bottom:8px}
+.bar-label b{color:#173b4d;font-size:12px}
+.bar-track{height:10px;border-radius:20px;background:#eef3f5;overflow:hidden}
+.bar-track span{display:block;height:100%;border-radius:20px;min-width:3px;transition:width .35s ease}
+.chart-empty{min-height:190px;display:grid;place-items:center;text-align:center;color:#94a2ac;font-size:12px}
+@media(max-width:900px){.analytics-grid{grid-template-columns:1fr}.donut-wrap{justify-content:flex-start}}
+@media(max-width:560px){.analytics-card{padding:17px}.donut-wrap{flex-direction:column;gap:18px}.donut-chart{width:165px;height:165px;flex-basis:165px}.donut-hole{width:108px;height:108px}.chart-legend{width:100%}.analytics-heading{align-items:center}}
