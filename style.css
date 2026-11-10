@@ -90,3 +90,5 @@ body:has(#dashboardView:not(.hidden)) footer{background:rgba(255,255,255,.35);ba
 .app-shell:has(#loginView:not(.hidden)) .workspace-topbar,.app-shell:has(#loginView:not(.hidden)) .workspace-sidebar{display:none}
 .app-shell:has(#loginView:not(.hidden)) .workspace-layout{display:block}
 .app-shell:has(#loginView:not(.hidden)) main{width:min(1160px,calc(100% - 32px));margin:28px auto 48px;padding:0}
+
+@media(max-width:760px){.sidebar-bottom{display:block;margin-top:8px}.sidebar-secure{display:none}.sidebar-logout{width:auto;margin-right:auto;padding:8px 13px;font-size:10px}}
