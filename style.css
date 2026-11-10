@@ -351,7 +351,7 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
 
 /* Typography refinement: clear, modern Arabic UI */
 :root{
-  --font-arabic:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --font-arabic:"Almarai","Segoe UI",Tahoma,sans-serif;
 }
 html,body,button,input,select,textarea{
   font-family:var(--font-arabic)!important;
