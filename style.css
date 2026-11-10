@@ -282,3 +282,19 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
   #contentBody .table-wrap .status{font-size:8px;padding:4px 5px}
   #contentBody .table-wrap::-webkit-scrollbar:horizontal{display:none!important;height:0!important}
 }
+
+/* Automatic OTP unlock animation */
+.otp-lock-body{transform-origin:25% 85%;transition:transform .48s cubic-bezier(.2,.8,.2,1),filter .4s}
+.otp-shackle{transform-origin:50% 90%;transition:transform .48s cubic-bezier(.2,.8,.2,1)}
+.otp-lock-visual i{transition:transform .35s,opacity .35s,box-shadow .35s}
+.otp-login-card.otp-unlock .otp-lock-body{transform:translateY(7px) rotate(-13deg);filter:drop-shadow(0 0 16px rgba(35,232,183,.7))}
+.otp-login-card.otp-unlock .otp-shackle{transform:translate(15px,-17px) rotate(38deg)}
+.otp-login-card.otp-unlock .otp-lock-visual i{transform:translate(20px,-16px) scale(1.3);opacity:0;box-shadow:0 0 24px #e9c56d}
+.otp-login-card.otp-unlock .otp-digit{animation:otp-confirm .32s ease both}
+.otp-login-card.otp-unlock .otp-digit:nth-child(2){animation-delay:.04s}
+.otp-login-card.otp-unlock .otp-digit:nth-child(3){animation-delay:.08s}
+.otp-login-card.otp-unlock .otp-digit:nth-child(4){animation-delay:.12s}
+@keyframes otp-confirm{50%{transform:translateY(-5px);box-shadow:0 0 0 3px rgba(46,226,177,.35),0 0 22px rgba(46,226,177,.35)}}
+.otp-login-card.otp-error-shake{animation:otp-shake .38s ease}
+@keyframes otp-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+@media(prefers-reduced-motion:reduce){.otp-lock-body,.otp-shackle,.otp-login-card.otp-unlock .otp-digit{transition:none;animation:none}}
