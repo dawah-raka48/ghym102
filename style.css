@@ -329,3 +329,21 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
 #loginView .otp-digit.otp-invalid{border-color:#ed6d7b!important;box-shadow:0 0 0 2px rgba(237,109,123,.22),0 0 18px rgba(237,109,123,.2)!important}
 #loginView .otp-master,#loginView .otp-cell{display:none!important}
 @media(max-width:560px){#loginView .otp-slots{gap:9px}#loginView .otp-digit{width:clamp(48px,15vw,65px)!important;height:66px!important;font-size:27px!important}}
+
+
+/* Use the full desktop viewport: remove the centered 1600px workspace cap */
+@media (min-width: 761px){
+  .workspace-layout{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    grid-template-columns:250px minmax(0,1fr)!important;
+  }
+  .workspace-layout main{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    padding-left:clamp(24px,3vw,52px)!important;
+    padding-right:clamp(24px,3vw,52px)!important;
+  }
+}
