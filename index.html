@@ -8,7 +8,7 @@
 <body>
 <div class="app-shell"> 
 
-<main>
+<header class="workspace-topbar"><a class="top-brand" href="#"><span class="top-brand-mark">غ</span><span><b>مركز غيم</b><small>منصة رسوم الطلاب</small></span></a><div class="topbar-date"><span class="topbar-date-icon">▦</span><span id="today">بوابة مركز غيم</span></div><div class="topbar-user"><span class="topbar-user-dot">●</span><span><b id="topUserName">مرحبًا بك</b><small id="topUserRole">منصة التحويلات المالية</small></span></div></header><div class="workspace-layout"><aside id="workspaceSidebar" class="workspace-sidebar"><div class="sidebar-brand"><span class="sidebar-logo">غ</span><b>غيم</b><small>GHAYM CENTER</small></div><div class="sidebar-caption">القائمة الرئيسية</div><nav id="sidebarNav" class="sidebar-nav"></nav><div class="sidebar-bottom"><div class="sidebar-secure"><span>✓</span><div><b>بياناتك آمنة</b><small>وصول حسب الصلاحيات</small></div></div><button id="logoutBtn" class="sidebar-logout hidden">تسجيل الخروج <span>↗</span></button></div></aside><main>
 <section id="configNotice" class="notice hidden">لم يتم ربط الخادم بعد. اتبع تعليمات README.md لإعداد Google Apps Script ثم ضع رابط /exec في app.js.</section>
 <section id="loginView" class="login-layout">
 
@@ -21,7 +21,7 @@
 <section id="contentPanel" class="panel content-panel hidden"><div class="section-heading"><div><span class="eyebrow">مركز غيم</span><h2 id="contentTitle">التحويلات</h2></div><button id="backBtn" class="btn ghost">العودة</button></div><div id="contentBody"></div></section>
 <section id="recentPanel" class="panel content-panel"><div class="section-heading"><div><h2>أحدث التحويلات</h2><p class="muted">آخر العمليات المسجلة حسب صلاحيتك</p></div><button id="refreshBtn" class="btn ghost">تحديث ↻</button></div><div id="recentTransfers" class="table-wrap"><p class="muted">سجّل الدخول لتحميل البيانات.</p></div></section>
 </section>
-</main><footer><span>مركز غيم © <span id="year"></span></span><span>نظام تحويلات رسوم الطلاب</span></footer>
+</main></div><footer><span>مركز غيم © <span id="year"></span></span><span>نظام تحويلات رسوم الطلاب</span></footer>
 </div><div id="toast" class="toast" role="status"></div>
 <script src="app.js"></script>
 </body></html>
