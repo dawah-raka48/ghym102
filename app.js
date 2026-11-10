@@ -28,7 +28,8 @@ async function api(action,data={}){
 }
 function saveSession(){try{sessionStorage.setItem("ghaymPortalSession",JSON.stringify({token:state.token,user:state.user}));}catch(_){}}
 function clearSession(){try{sessionStorage.removeItem("ghaymPortalSession");}catch(_){}}
-\nfunction showLogin(){ $("loginView").classList.remove("hidden");$("dashboardView").classList.add("hidden");$("logoutBtn").classList.add("hidden");state.token="";state.user=null;clearSession();clearOtpFields();focusOtp(0);}
+
+function showLogin(){ $("loginView").classList.remove("hidden");$("dashboardView").classList.add("hidden");$("logoutBtn").classList.add("hidden");state.token="";state.user=null;clearSession();clearOtpFields();focusOtp(0);}
 function showDashboard(user){clearOtpFields();state.user=user;$("loginView").classList.add("hidden");$("dashboardView").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");$("welcomeTitle").textContent="أهلًا، "+state.user.name;$("welcomeSub").textContent=state.user.role==="ACCOUNTANT"?"مراجعة التحويلات وتأكيد الفواتير":"رفع التحويلات ومتابعة حالتها";$("roleBadge").textContent=state.user.role==="ACCOUNTANT"?"المحاسب العام":"موظف إدخال البيانات";actions();}
 function renderStats(){const all=state.transfers;const total=all.reduce((a,t)=>a+Number(t.amount||0),0);const pending=all.filter(t=>t.status==="PENDING").length;const invoiced=all.filter(t=>t.status==="COMPLETED").length;const cards=[["إجمالي التحويلات",all.length],["إجمالي المبالغ",money(total)],["قيد المراجعة",pending],["فواتير مؤكدة",invoiced]];$("statsGrid").innerHTML=cards.map(([l,v])=>'<article class="stat-card"><span>'+l+'</span><b>'+esc(v)+'</b><small>حسب صلاحيتك</small></article>').join("");}
 function actions(){const isAcc=state.user.role==="ACCOUNTANT";const list=isAcc?[["review","مراجعة التحويلات","مراجعة الإيصالات وتحديث الحالة","✓"],["reports","التقارير الأسبوعية","تقرير أسبوعي للتحويلات والمبالغ والحالات بصيغة PDF","▤"],["audit","سجل التدقيق","متابعة التغييرات والإجراءات","◷"]]:[["new","رفع تحويل جديد","إدخال بيانات الطالب وإيصال PDF","＋"],["mine","تحويلاتي","متابعة الطلبات التي رفعتها","▤"],["reports","التقارير الأسبوعية","تقرير أسبوعي لعملياتك ومبالغها بصيغة PDF","◷"]];$("actionGrid").innerHTML=list.map(([v,t,d,i])=>'<button class="action-card" data-view="'+v+'"><span class="action-icon">'+i+'</span><b>'+t+'</b><small>'+d+'</small></button>').join("");const icons={review:"▤",reports:"▥",audit:"◷",new:"＋",mine:"▣"};$("sidebarNav").innerHTML='<button class="sidebar-link active" data-home><span class="sidebar-link-icon">⌂</span><span>الرئيسية</span></button>'+list.map(([v,t])=>'<button class="sidebar-link" data-view="'+v+'"><span class="sidebar-link-icon">'+icons[v]+'</span><span>'+t+'</span></button>').join("");$("topUserName").textContent=state.user.name;$("topUserRole").textContent=isAcc?"المحاسب العام":"المساعدة الإدارية";}
@@ -102,7 +103,7 @@ async function submitOtpLogin(){
   const r=await api("login",{accessCode:code});
   $("otpStatus").textContent="تم فتح القفل بنجاح";
   await new Promise(resolve=>setTimeout(resolve,520));
-  state.token=r.token;state.user=r.user;saveSession();showDashboard(state.user);await loadTransfers();
+  state.token=r.token;state.user=r.user;saveSession();showDashboard(state.user);try{await loadTransfers();}catch(loadError){toast("تم تسجيل الدخول، لكن تعذر تحميل البيانات: "+loadError.message);}
  }catch(err){
   card.classList.remove("otp-unlock");
   card.classList.add("otp-error-shake");
