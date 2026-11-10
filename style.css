@@ -52,3 +52,11 @@ body:has(#dashboardView:not(.hidden)) .action-card{background-color:rgba(255,255
 body:has(#dashboardView:not(.hidden)) .table-wrap{background:rgba(255,255,255,.88)}
 body:has(#dashboardView:not(.hidden)) footer{background:rgba(255,255,255,.35);backdrop-filter:blur(10px)}
 @media(max-width:700px){body:has(#dashboardView:not(.hidden)){background-attachment:scroll;background-position:center top}}
+
+/* In-app PDF receipt preview */
+.receipt-modal{position:fixed;inset:0;z-index:1000;background:rgba(7,25,34,.72);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:18px}
+.receipt-dialog{width:min(1100px,100%);height:min(92vh,900px);background:#fff;border-radius:18px;box-shadow:0 25px 90px rgba(0,0,0,.32);display:flex;flex-direction:column;overflow:hidden}
+.receipt-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 17px;border-bottom:1px solid #e3ebe7;background:#fbfdfc}
+.receipt-toolbar b,.receipt-toolbar small{display:block}.receipt-toolbar b{font-size:15px}.receipt-toolbar small{font-size:11px;color:#71817b;margin-top:3px;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.receipt-tools{display:flex;gap:8px;align-items:center}.receipt-frame{border:0;width:100%;height:100%;background:#e9eef0;flex:1}
+@media(max-width:600px){.receipt-modal{padding:0}.receipt-dialog{width:100%;height:100%;border-radius:0}.receipt-toolbar{padding:11px;align-items:flex-start}.receipt-tools{gap:5px}.receipt-tools .btn{padding:9px 10px;font-size:11px}.receipt-toolbar small{max-width:32vw}}
