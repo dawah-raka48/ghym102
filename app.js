@@ -86,7 +86,7 @@ function clearOtpFields(){
 async function submitOtpLogin(){
  if(otpSubmitting)return;
  const code=otpDigits.map(x=>x.value).join("");
- if(!/^\\d{4}$/.test(code))return;
+ if(!/^\d{4}$/.test(code))return;
  otpSubmitting=true;
  const card=$("loginForm");
  card.classList.remove("otp-unlock","otp-error-shake");
