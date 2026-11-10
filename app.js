@@ -60,11 +60,51 @@ function exportPdf(){
  const q=($("reportSearch")?.value||"").trim().toLowerCase(),s=$("reportStatus")?.value||"";
  const items=state.transfers.filter(t=>(!s||t.status===s)&&((t.studentName+" "+t.transferId).toLowerCase().includes(q)));
  const total=items.reduce((sum,t)=>sum+Number(t.amount||0),0);
- const date=new Date().toLocaleDateString("ar-SA",{year:"numeric",month:"long",day:"numeric"});
- const rows=items.map((t,i)=>'<tr><td>'+ (i+1) +'</td><td>'+esc(t.transferId)+'</td><td>'+esc(t.studentName)+'</td><td>'+esc(t.period)+'</td><td>'+esc(money(t.amount))+'</td><td>'+esc(t.invoiceNumber||"—")+'</td><td>'+esc(statuses[t.status]||t.status)+'</td><td>'+esc(t.createdAt||"—")+'</td></tr>').join("");
+ const date=new Date().toLocaleDateString("ar-SA",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+ const issuedAt=new Date().toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit"});
+ const pending=items.filter(t=>t.status==="PENDING").length;
+ const completed=items.filter(t=>t.status==="COMPLETED").length;
+ const rows=items.map((t,i)=>'<tr><td class="center">'+(i+1)+'</td><td class="ref">'+esc(t.transferId)+'</td><td class="student">'+esc(t.studentName)+'</td><td>'+esc(t.period)+'</td><td class="amount">'+esc(money(t.amount))+'</td><td class="center">'+esc(t.invoiceNumber||"—")+'</td><td class="center"><span class="status status-'+esc(t.status).toLowerCase()+'">'+esc(statuses[t.status]||t.status)+'</span></td><td class="date">'+esc(t.createdAt||"—")+'</td></tr>').join("");
  const win=window.open("","_blank");
  if(!win){toast("اسمح بالنوافذ المنبثقة لإصدار التقرير PDF");return;}
- win.document.write('<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير تحويلات رسوم الطلاب - مركز غيم</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#15384a;margin:0;background:#fff;font-size:11px}.head{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #d6b05e;padding:0 0 12px;margin-bottom:16px}.brand{font-size:22px;font-weight:bold;color:#087c78}.sub{font-size:12px;color:#a47a27;margin-top:5px}.meta{text-align:left;color:#64798a;line-height:1.8}.title{text-align:center;font-size:20px;margin:18px 0 5px}.desc{text-align:center;color:#718596;margin-bottom:16px}.stats{display:flex;gap:10px;margin:12px 0 18px}.stat{flex:1;border:1px solid #dce7eb;background:#f4faf9;border-radius:9px;padding:10px;text-align:center}.stat b{display:block;font-size:17px;margin-top:5px;color:#087c78}.stat span{color:#64798a}table{width:100%;border-collapse:collapse;table-layout:auto}thead{display:table-header-group}tr{break-inside:avoid}th{background:#0b625d;color:white;font-weight:bold}th,td{border:1px solid #dfe8ec;padding:8px 7px;text-align:right;vertical-align:middle}tbody tr:nth-child(even){background:#f5f9fb}.empty{text-align:center;padding:28px;color:#718596}.foot{display:flex;justify-content:space-between;margin-top:18px;padding-top:9px;border-top:1px solid #dce5e9;color:#718596;font-size:10px}.sign{display:flex;gap:40px;margin-top:25px}.sign span{flex:1;border-top:1px solid #aabac2;padding-top:8px;text-align:center}@media print{.no-print{display:none}}</style></head><body><header class="head"><div><div class="brand">مركز غيم لضيافة الأطفال</div><div class="sub">التقارير المالية · تحويلات رسوم الطلاب</div></div><div class="meta">تاريخ إصدار التقرير: '+esc(date)+'<br>نوع التقرير: '+(s?esc(statuses[s]||s):"جميع الحالات")+'</div></header><h1 class="title">تقرير تحويلات رسوم الطلاب</h1><div class="desc">تقرير منظم بالعمليات المسجلة في النظام للفترة المتاحة</div><section class="stats"><div class="stat"><span>عدد العمليات</span><b>'+items.length+'</b></div><div class="stat"><span>إجمالي المبالغ</span><b>'+esc(money(total))+'</b></div><div class="stat"><span>قيد المراجعة</span><b>'+items.filter(t=>t.status==="PENDING").length+'</b></div><div class="stat"><span>فواتير مؤكدة</span><b>'+items.filter(t=>t.status==="COMPLETED").length+'</b></div></section>'+(items.length?'<table><thead><tr><th>م</th><th>الرقم المرجعي</th><th>اسم الطالب</th><th>الفترة المسددة</th><th>المبلغ</th><th>رقم الفاتورة</th><th>الحالة</th><th>تاريخ الرفع</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><th colspan="4">إجمالي المبالغ</th><th>'+esc(money(total))+'</th><th colspan="3">عدد العمليات: '+items.length+'</th></tr></tfoot></table>':'<div class="empty">لا توجد عمليات مطابقة لمعايير التقرير.</div>')+'<div class="sign"><span>إعداد المساعدة الإدارية</span><span>مراجعة المحاسب العام</span></div><footer class="foot"><span>مركز غيم لضيافة الأطفال</span><span>تقرير داخلي للاستخدام الإداري</span></footer><script>window.onload=()=>setTimeout(()=>window.print(),350);<\/script></body></html>');
+ win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تقرير تحويلات رسوم الطلاب | مركز غيم</title>
+<style>
+@page{size:A4 landscape;margin:9mm}*{box-sizing:border-box}
+:root{--teal:#087c7c;--deep:#103b50;--gold:#c99a3b;--muted:#6e8492;--line:#dce7ec;--pale:#f2f8f9}
+html,body{margin:0;padding:0;background:#fff;color:var(--deep);font-family:Tahoma,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-size:10px;line-height:1.55}.sheet{width:100%;margin:0 auto}
+.masthead{display:flex;align-items:center;justify-content:space-between;padding:0 0 11px;border-bottom:3px solid var(--gold)}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#0a9e99,#07516a);color:#fff;display:grid;place-items:center;font-size:27px;font-weight:900;box-shadow:0 4px 12px #0a687322}
+.brand-name{font-size:19px;font-weight:900;color:var(--teal)}.brand-sub{font-size:9px;color:#a27a2c;font-weight:700;margin-top:2px}
+.meta{text-align:left;color:var(--muted);font-size:9px;line-height:1.9}.meta b{color:var(--deep)}
+.heading{text-align:center;padding:11px 0 8px}.heading h1{font-size:18px;margin:0;color:var(--deep);font-weight:900}.heading p{font-size:9px;color:var(--muted);margin:4px 0 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:7px 0 13px}
+.stat{position:relative;border:1px solid var(--line);border-radius:10px;background:linear-gradient(135deg,#f8fbfc,#eef7f6);padding:8px 12px;text-align:center;overflow:hidden}
+.stat:before{content:"";position:absolute;right:0;top:0;bottom:0;width:3px;background:var(--teal)}
+.stat span{display:block;color:var(--muted);font-size:9px}.stat b{display:block;color:var(--teal);font-size:15px;font-weight:900;margin-top:3px}
+.table-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px}.table-title b{font-size:11px}.table-title span{color:var(--muted);font-size:9px}
+table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}
+th{background:#0c6664;color:#fff;font-size:9px;font-weight:800;padding:8px 6px;text-align:right}
+td{border-bottom:1px solid #e4ecef;padding:7px 6px;text-align:right;vertical-align:middle;font-size:9px;color:#294b5d;overflow-wrap:anywhere}
+tbody tr:nth-child(even){background:#f4f8fa}tbody tr:last-child td{border-bottom:0}
+th:nth-child(1){width:3%}th:nth-child(2){width:16%}th:nth-child(3){width:13%}th:nth-child(4){width:16%}th:nth-child(5){width:10%}th:nth-child(6){width:8%}th:nth-child(7){width:13%}th:nth-child(8){width:21%}
+.center{text-align:center}.ref{font-size:8px;direction:ltr;text-align:center}.student{font-weight:700}.amount{font-weight:900;color:#087c7c;white-space:nowrap}.date{font-size:8px;color:#647d8c}
+.status{display:inline-block;padding:3px 6px;border-radius:20px;background:#edf3f5;color:#45616f;font-size:8px;font-weight:700;white-space:nowrap}
+.status-completed{background:#e2f4ed;color:#147452}.status-pending,.status-invoice_pending{background:#fff3dc;color:#946316}.status-returned,.status-rejected{background:#fdebec;color:#a43c46}.status-accepted{background:#e7f2ff;color:#28649a}
+tfoot th{background:#0b4f59;font-size:10px;padding:9px 7px}.empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:10px}
+.signatures{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin:19px 0 12px}.signature{border-top:1px solid #9aadb7;padding-top:7px;text-align:center;color:#536e7c;font-size:9px}
+.footer{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:7px;color:#8295a0;font-size:8px}
+@media print{.no-print{display:none!important}thead{display:table-header-group}tr{break-inside:avoid}}
+</style></head><body><main class="sheet">
+<header class="masthead"><div class="brand"><div class="brand-mark">غ</div><div><div class="brand-name">مركز غيم لضيافة الأطفال</div><div class="brand-sub">GHAYM CENTER · FINANCE</div></div></div><div class="meta"><b>تاريخ إصدار التقرير:</b> ${esc(date)}<br><b>وقت الإصدار:</b> ${esc(issuedAt)}<br><b>نوع التقرير:</b> ${esc(s?(statuses[s]||s):"جميع الحالات")}</div></header>
+<section class="heading"><h1>تقرير تحويلات رسوم الطلاب</h1><p>ملخص العمليات المالية المسجلة ومتابعة حالة التحويلات والفواتير</p></section>
+<section class="stats"><div class="stat"><span>إجمالي العمليات</span><b>${items.length}</b></div><div class="stat"><span>إجمالي المبالغ</span><b>${esc(money(total))}</b></div><div class="stat"><span>قيد المراجعة</span><b>${pending}</b></div><div class="stat"><span>فواتير مؤكدة</span><b>${completed}</b></div></section>
+<div class="table-title"><b>تفاصيل التحويلات</b><span>عدد السجلات: ${items.length}</span></div>
+${items.length?'<table><thead><tr><th>م</th><th>الرقم المرجعي</th><th>اسم الطالب</th><th>الفترة المسددة</th><th>المبلغ</th><th>رقم الفاتورة</th><th>الحالة</th><th>تاريخ الرفع</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><th colspan="4">إجمالي المبالغ</th><th>'+esc(money(total))+'</th><th colspan="3">إجمالي عدد العمليات: '+items.length+'</th></tr></tfoot></table>':'<div class="empty">لا توجد عمليات مطابقة لمعايير التقرير.</div>'}
+<section class="signatures"><div class="signature">إعداد المساعدة الإدارية</div><div class="signature">مراجعة واعتماد المحاسب العام</div></section>
+<footer class="footer"><span>مركز غيم لضيافة الأطفال · تقرير داخلي للاستخدام الإداري</span><span>تم إنشاء التقرير إلكترونيًا من منصة رسوم الطلاب</span></footer>
+</main><script>window.onload=()=>setTimeout(()=>window.print(),450);<\/script></body></html>`);
  win.document.close();
 }
 
