@@ -215,3 +215,36 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
  body:has(#loginView:not(.hidden)){background-attachment:scroll!important}
  body:has(#loginView:not(.hidden)) #loginView .otp-login-card{background:rgba(255,255,255,.16)!important}
 }
+
+/* Final fix: make the recent-transfers table fit its panel with zero horizontal scrolling */
+#recentPanel #recentTransfers,
+#recentPanel #recentTransfers>.table-wrap{
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  overflow-x:hidden!important;box-sizing:border-box!important;
+}
+#recentPanel #recentTransfers>.table-wrap{overflow-y:visible!important}
+#recentPanel #recentTransfers table{
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  table-layout:fixed!important;box-sizing:border-box!important;
+}
+#recentPanel #recentTransfers th,
+#recentPanel #recentTransfers td{
+  min-width:0!important;padding:10px 6px!important;
+  font-size:9px!important;line-height:1.45!important;
+  overflow-wrap:anywhere!important;word-break:normal!important;
+}
+#recentPanel #recentTransfers th:nth-child(1),#recentPanel #recentTransfers td:nth-child(1){width:16%!important}
+#recentPanel #recentTransfers th:nth-child(2),#recentPanel #recentTransfers td:nth-child(2){width:14%!important}
+#recentPanel #recentTransfers th:nth-child(3),#recentPanel #recentTransfers td:nth-child(3){width:9%!important}
+#recentPanel #recentTransfers th:nth-child(4),#recentPanel #recentTransfers td:nth-child(4){width:13%!important}
+#recentPanel #recentTransfers th:nth-child(5),#recentPanel #recentTransfers td:nth-child(5){width:10%!important}
+#recentPanel #recentTransfers th:nth-child(6),#recentPanel #recentTransfers td:nth-child(6){width:16%!important}
+#recentPanel #recentTransfers th:nth-child(7),#recentPanel #recentTransfers td:nth-child(7){width:22%!important}
+#recentPanel #recentTransfers .row-actions{display:flex!important;flex-wrap:wrap!important;gap:3px!important;align-items:center!important}
+#recentPanel #recentTransfers .row-actions .btn{padding:5px 6px!important;font-size:9px!important;line-height:1.2!important;white-space:nowrap!important;min-width:0!important}
+#recentPanel #recentTransfers .status{font-size:8px!important;padding:4px 5px!important}
+#recentPanel #recentTransfers::-webkit-scrollbar:horizontal{display:none!important;height:0!important}
+@media(min-width:901px){
+ #recentPanel #recentTransfers{overflow-y:auto!important;overflow-x:hidden!important}
+ #recentPanel #recentTransfers>.table-wrap{overflow:visible!important}
+}
