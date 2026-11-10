@@ -298,3 +298,15 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
 .otp-login-card.otp-error-shake{animation:otp-shake .38s ease}
 @keyframes otp-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
 @media(prefers-reduced-motion:reduce){.otp-lock-body,.otp-shackle,.otp-login-card.otp-unlock .otp-digit{transition:none;animation:none}}
+
+/* Robust masked OTP entry and visible validation state */
+#loginView .otp-digit{
+ -webkit-text-security:disc!important;
+ text-security:disc!important;
+ caret-color:#39d5bd!important;
+ user-select:none;
+}
+#loginView .otp-digit:focus{outline:0!important}
+#loginView .otp-source-input{display:none!important}
+#loginView .otp-login-card.otp-error-shake{animation:otp-shake .38s ease!important}
+#loginView .otp-error{display:block!important;min-height:18px!important}
