@@ -92,3 +92,48 @@ body:has(#dashboardView:not(.hidden)) footer{background:rgba(255,255,255,.35);ba
 .app-shell:has(#loginView:not(.hidden)) main{width:min(1160px,calc(100% - 32px));margin:28px auto 48px;padding:0}
 
 @media(max-width:760px){.sidebar-bottom{display:block;margin-top:8px}.sidebar-secure{display:none}.sidebar-logout{width:auto;margin-right:auto;padding:8px 13px;font-size:10px}}
+
+/* Latest transfers: fit every column without horizontal scrolling */
+body:has(#dashboardView:not(.hidden)){background-image:none!important;background-color:#f3f7fb}
+#recentPanel{width:100%;max-width:100%;overflow:hidden;border:1px solid #e5edf2;border-radius:22px;background:rgba(255,255,255,.97);box-shadow:0 14px 38px rgba(19,54,75,.055);padding:24px}
+#recentPanel .section-heading{padding:0 2px 16px;margin:0 0 14px;border-bottom:1px solid #edf1f5}
+#recentPanel .section-heading h2{font-size:21px;font-weight:850;color:#15384b}
+#recentPanel .section-heading p{color:#8394a2;font-size:12px}
+#recentPanel #recentTransfers{width:100%;max-height:440px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;border:1px solid #e7edf2;border-radius:15px;background:#fff}
+#recentPanel #recentTransfers>.table-wrap{width:100%;border:0;border-radius:0;overflow:visible}
+#recentPanel #recentTransfers table{width:100%;min-width:0;table-layout:fixed;border-collapse:separate;border-spacing:0;white-space:normal;font-size:11px}
+#recentPanel #recentTransfers th,#recentPanel #recentTransfers td{padding:13px 9px;white-space:normal;overflow-wrap:anywhere;word-break:normal;line-height:1.55;vertical-align:middle}
+#recentPanel #recentTransfers th{font-size:10px;font-weight:850;color:#60798a;background:#f4f8fb}
+#recentPanel #recentTransfers th:nth-child(1),#recentPanel #recentTransfers td:nth-child(1){width:17%}
+#recentPanel #recentTransfers th:nth-child(2),#recentPanel #recentTransfers td:nth-child(2){width:14%}
+#recentPanel #recentTransfers th:nth-child(3),#recentPanel #recentTransfers td:nth-child(3){width:10%}
+#recentPanel #recentTransfers th:nth-child(4),#recentPanel #recentTransfers td:nth-child(4){width:15%}
+#recentPanel #recentTransfers th:nth-child(5),#recentPanel #recentTransfers td:nth-child(5){width:12%}
+#recentPanel #recentTransfers th:nth-child(6),#recentPanel #recentTransfers td:nth-child(6){width:15%}
+#recentPanel #recentTransfers th:nth-child(7),#recentPanel #recentTransfers td:nth-child(7){width:17%}
+#recentPanel #recentTransfers .row-actions{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+#recentPanel #recentTransfers .row-actions .btn{padding:6px 8px;font-size:10px;white-space:normal}
+#recentPanel #recentTransfers .status{font-size:9px;padding:5px 7px;white-space:normal;line-height:1.4}
+#recentPanel #recentTransfers tbody tr:nth-child(even){background:#fbfdff}
+#recentPanel #recentTransfers tbody tr:hover{background:#f0f8f8}
+#recentPanel #recentTransfers thead th{position:sticky;top:0;z-index:3;box-shadow:0 1px 0 #e5edf0}
+#recentPanel #recentTransfers::-webkit-scrollbar{width:7px}
+#recentPanel #recentTransfers::-webkit-scrollbar-thumb{background:#bfd1d8;border-radius:20px}
+@media(max-width:900px){
+ #recentPanel{padding:16px}
+ #recentPanel #recentTransfers{max-height:none;overflow:visible;border:0;background:transparent}
+ #recentPanel #recentTransfers>.table-wrap{overflow:visible}
+ #recentPanel #recentTransfers table,#recentPanel #recentTransfers tbody{display:block;width:100%}
+ #recentPanel #recentTransfers thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+ #recentPanel #recentTransfers tbody tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;margin:0 0 12px;padding:10px 12px;border:1px solid #e7edf2;border-radius:14px;background:#fff}
+ #recentPanel #recentTransfers tbody td{display:flex;flex-direction:column;gap:4px;width:auto!important;min-width:0;padding:8px 3px;border-bottom:1px solid #f0f3f6;font-size:11px}
+ #recentPanel #recentTransfers tbody td:before{content:attr(data-label);font-size:9px;color:#8496a3;font-weight:800}
+ #recentPanel #recentTransfers tbody td:last-child{grid-column:1/-1;border-bottom:0}
+ #recentPanel #recentTransfers .row-actions{justify-content:flex-start}
+}
+@media(max-width:480px){
+ #recentPanel{padding:13px;border-radius:17px}
+ #recentPanel .section-heading h2{font-size:18px}
+ #recentPanel #recentTransfers tbody tr{grid-template-columns:1fr 1fr}
+ #recentPanel #recentTransfers tbody td{font-size:10px}
+}
