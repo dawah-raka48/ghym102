@@ -73,12 +73,20 @@ function syncOtp(){
  const code=otpDigits.map(x=>x.value).join("");
  $("accessCode").value=code;
  $("otpStatus").textContent=code.length===4?"جاري فتح القفل…":"أدخل الأرقام الأربعة للمتابعة";
- otpDigits.forEach((el,i)=>el.classList.toggle("filled",!!el.value));
+ otpDigits.forEach(el=>el.classList.toggle("filled",!!el.value));
+}
+function focusOtp(index){requestAnimationFrame(()=>{const el=otpDigits[index];if(el){el.focus();el.select?.();}});}
+function clearOtpFields(){
+ otpDigits.forEach(x=>{x.value="";x.classList.remove("filled","otp-invalid");});
+ $("accessCode").value="";
+ $("otpStatus").textContent="أدخل الأرقام الأربعة للمتابعة";
+ $("loginError").textContent="";
+ $("loginForm").classList.remove("otp-unlock","otp-error-shake");
 }
 async function submitOtpLogin(){
  if(otpSubmitting)return;
  const code=otpDigits.map(x=>x.value).join("");
- if(code.length!==4)return;
+ if(!/^\\d{4}$/.test(code))return;
  otpSubmitting=true;
  const card=$("loginForm");
  card.classList.remove("otp-unlock","otp-error-shake");
@@ -92,29 +100,46 @@ async function submitOtpLogin(){
   await new Promise(resolve=>setTimeout(resolve,520));
   state.token=r.token;state.user=r.user;saveSession();showDashboard(state.user);await loadTransfers();
  }catch(err){
-  card.classList.remove("otp-unlock");card.classList.add("otp-error-shake");
+  card.classList.remove("otp-unlock");
+  card.classList.add("otp-error-shake");
   $("loginError").textContent=err.message||"رمز الدخول غير صحيح";
   $("otpStatus").textContent="الرمز غير صحيح، حاول مرة أخرى";
   otpDigits.forEach(x=>x.classList.add("otp-invalid"));
-  setTimeout(()=>{otpDigits.forEach(x=>x.classList.remove("otp-invalid"));card.classList.remove("otp-error-shake");},900);
-  otpDigits.forEach(x=>x.value="");$("accessCode").value="";otpDigits[0].focus();
+  setTimeout(()=>{clearOtpFields();card.classList.remove("otp-error-shake");focusOtp(0);},650);
  }finally{otpSubmitting=false;}
 }
 otpDigits.forEach((el,index)=>{
  el.addEventListener("input",()=>{
-  el.value=el.value.replace(/\D/g,"").slice(-1);
+  const digits=el.value.replace(/\\D/g,"");
+  if(digits.length>1){
+   const chars=digits.slice(0,4).split("");
+   chars.forEach((digit,i)=>{if(otpDigits[i])otpDigits[i].value=digit;});
+   syncOtp();
+   if(chars.length===4)submitOtpLogin();else focusOtp(Math.min(chars.length,3));
+   return;
+  }
+  el.value=digits.slice(-1);
   syncOtp();
-  if(el.value&&index<3)otpDigits[index+1].focus();
+  if(el.value&&index<3)focusOtp(index+1);
   if(otpDigits.every(x=>x.value))submitOtpLogin();
  });
  el.addEventListener("keydown",e=>{
-  if(e.key==="Backspace"&&!el.value&&index>0){otpDigits[index-1].value="";otpDigits[index-1].focus();syncOtp();}
-  if(e.key==="ArrowLeft"&&index<3)otpDigits[index+1].focus();
-  if(e.key==="ArrowRight"&&index>0)otpDigits[index-1].focus();
+  if(e.key==="Backspace"){
+   if(el.value){el.value="";syncOtp();}
+   else if(index>0){otpDigits[index-1].value="";syncOtp();focusOtp(index-1);}
+   e.preventDefault();return;
+  }
+  if(e.key==="ArrowLeft"&&index<3){e.preventDefault();focusOtp(index+1);}
+  if(e.key==="ArrowRight"&&index>0){e.preventDefault();focusOtp(index-1);}
+  if(e.key==="Enter"){e.preventDefault();submitOtpLogin();}
  });
  el.addEventListener("paste",e=>{
-  const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/\D/g,"").slice(0,4);
-  if(pasted){e.preventDefault();pasted.split("").forEach((digit,i)=>otpDigits[i].value=digit);syncOtp();if(pasted.length===4)submitOtpLogin();else otpDigits[Math.min(pasted.length,3)].focus();}
+  const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/\\D/g,"").slice(0,4);
+  if(!pasted)return;
+  e.preventDefault();
+  otpDigits.forEach((input,i)=>input.value=pasted[i]||"");
+  syncOtp();
+  if(pasted.length===4)submitOtpLogin();else focusOtp(pasted.length);
  });
 });
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();submitOtpLogin();});
