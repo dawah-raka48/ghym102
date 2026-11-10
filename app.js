@@ -67,11 +67,11 @@ function exportPdf(){
  const rows=items.map((t,i)=>'<tr><td class="center">'+(i+1)+'</td><td class="ref">'+esc(t.transferId)+'</td><td class="student">'+esc(t.studentName)+'</td><td>'+esc(t.period)+'</td><td class="amount">'+esc(money(t.amount))+'</td><td class="center">'+esc(t.invoiceNumber||"—")+'</td><td class="center"><span class="status status-'+esc(t.status).toLowerCase()+'">'+esc(statuses[t.status]||t.status)+'</span></td><td class="date">'+esc(t.createdAt||"—")+'</td></tr>').join("");
  const win=window.open("","_blank");
  if(!win){toast("اسمح بالنوافذ المنبثقة لإصدار التقرير PDF");return;}
- win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تقرير تحويلات رسوم الطلاب | مركز غيم</title>
+ win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet"><title>تقرير تحويلات رسوم الطلاب | مركز غيم</title>
 <style>
 @page{size:A4 landscape;margin:9mm}*{box-sizing:border-box}
 :root{--teal:#087c7c;--deep:#103b50;--gold:#c99a3b;--muted:#6e8492;--line:#dce7ec;--pale:#f2f8f9}
-html,body{margin:0;padding:0;background:#fff;color:var(--deep);font-family:Tahoma,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;background:#fff;color:var(--deep);font-family:"Almarai",Tahoma,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body{font-size:10px;line-height:1.55}.sheet{width:100%;margin:0 auto}
 .masthead{display:flex;align-items:center;justify-content:space-between;padding:0 0 11px;border-bottom:3px solid var(--gold)}
 .brand{display:flex;align-items:center;gap:11px}.brand-mark{width:45px;height:45px;border-radius:14px;background:linear-gradient(145deg,#0a9e99,#07516a);color:#fff;display:grid;place-items:center;font-size:27px;font-weight:900;box-shadow:0 4px 12px #0a687322}
