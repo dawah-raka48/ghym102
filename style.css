@@ -347,3 +347,33 @@ body:has(#loginView:not(.hidden)) #loginView .otp-login-brand b{color:#fff!impor
     padding-right:clamp(24px,3vw,52px)!important;
   }
 }
+
+
+/* Typography refinement: clear, modern Arabic UI */
+:root{
+  --font-arabic:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+html,body,button,input,select,textarea{
+  font-family:var(--font-arabic)!important;
+  font-feature-settings:"kern" 1,"liga" 1;
+  text-rendering:optimizeLegibility;
+}
+body{font-weight:400;letter-spacing:0}
+h1,h2,h3,h4,.page-heading h1,.section-heading h2,
+.dashboard-hero h1,.dashboard-hero h2,
+.stat-card b,.brand b,.top-brand b,.sidebar-brand b{
+  font-family:var(--font-arabic)!important;
+  font-weight:700!important;
+  letter-spacing:-.35px;
+}
+p,.muted,.section-heading p,.stat-card span,.stat-card small,
+.sidebar-caption,.sidebar-link,.topbar-date,.topbar-user,
+th,td,label,.field small,.eyebrow{
+  font-family:var(--font-arabic)!important;
+}
+.sidebar-link{font-weight:600}
+th{font-weight:700!important}
+td{font-weight:500}
+.stat-card b{font-variant-numeric:tabular-nums}
+.btn{font-weight:600;letter-spacing:0}
+input,select,textarea{font-weight:500}
