@@ -68,13 +68,56 @@ function exportPdf(){
 }
 
 const otpDigits=[1,2,3,4].map(n=>$("otpDigit"+n));
-function syncOtp(){const code=otpDigits.map(x=>x.value).join("");$("accessCode").value=code;$("otpStatus").textContent=code.length===4?"الرمز جاهز، اضغط دخول للمتابعة":"أدخل الأرقام الأربعة للمتابعة";otpDigits.forEach((el,i)=>el.classList.toggle("filled",!!el.value));}
+let otpSubmitting=false;
+function syncOtp(){
+ const code=otpDigits.map(x=>x.value).join("");
+ $("accessCode").value=code;
+ $("otpStatus").textContent=code.length===4?"جاري فتح القفل…":"أدخل الأرقام الأربعة للمتابعة";
+ otpDigits.forEach((el,i)=>el.classList.toggle("filled",!!el.value));
+}
+async function submitOtpLogin(){
+ if(otpSubmitting)return;
+ const code=otpDigits.map(x=>x.value).join("");
+ if(code.length!==4)return;
+ otpSubmitting=true;
+ const card=$("loginForm");
+ card.classList.remove("otp-unlock","otp-error-shake");
+ void card.offsetWidth;
+ card.classList.add("otp-unlock");
+ $("otpStatus").textContent="تم إدخال الرمز… جارٍ التحقق";
+ $("loginError").textContent="";
+ try{
+  const r=await api("login",{accessCode:code});
+  $("otpStatus").textContent="تم فتح القفل بنجاح";
+  await new Promise(resolve=>setTimeout(resolve,520));
+  state.token=r.token;state.user=r.user;saveSession();showDashboard(state.user);await loadTransfers();
+ }catch(err){
+  card.classList.remove("otp-unlock");card.classList.add("otp-error-shake");
+  $("loginError").textContent=err.message||"رمز الدخول غير صحيح";
+  $("otpStatus").textContent="الرمز غير صحيح، حاول مرة أخرى";
+  otpDigits.forEach(x=>x.classList.add("otp-invalid"));
+  setTimeout(()=>{otpDigits.forEach(x=>x.classList.remove("otp-invalid"));card.classList.remove("otp-error-shake");},900);
+  otpDigits.forEach(x=>x.value="");$("accessCode").value="";otpDigits[0].focus();
+ }finally{otpSubmitting=false;}
+}
 otpDigits.forEach((el,index)=>{
- el.addEventListener("input",()=>{el.value=el.value.replace(/\\D/g,"").slice(-1);syncOtp();if(el.value&&index<3)otpDigits[index+1].focus();});
- el.addEventListener("keydown",e=>{if(e.key==="Backspace"&&!el.value&&index>0){otpDigits[index-1].value="";otpDigits[index-1].focus();syncOtp();}if(e.key==="ArrowLeft"&&index<3){otpDigits[index+1].focus();}if(e.key==="ArrowRight"&&index>0){otpDigits[index-1].focus();}});
- el.addEventListener("paste",e=>{const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/\\D/g,"").slice(0,4);if(pasted){e.preventDefault();pasted.split("").forEach((digit,i)=>otpDigits[i].value=digit);syncOtp();otpDigits[Math.min(pasted.length,3)].focus();}});
+ el.addEventListener("input",()=>{
+  el.value=el.value.replace(/\D/g,"").slice(-1);
+  syncOtp();
+  if(el.value&&index<3)otpDigits[index+1].focus();
+  if(otpDigits.every(x=>x.value))submitOtpLogin();
+ });
+ el.addEventListener("keydown",e=>{
+  if(e.key==="Backspace"&&!el.value&&index>0){otpDigits[index-1].value="";otpDigits[index-1].focus();syncOtp();}
+  if(e.key==="ArrowLeft"&&index<3)otpDigits[index+1].focus();
+  if(e.key==="ArrowRight"&&index>0)otpDigits[index-1].focus();
+ });
+ el.addEventListener("paste",e=>{
+  const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/\D/g,"").slice(0,4);
+  if(pasted){e.preventDefault();pasted.split("").forEach((digit,i)=>otpDigits[i].value=digit);syncOtp();if(pasted.length===4)submitOtpLogin();else otpDigits[Math.min(pasted.length,3)].focus();}
+ });
 });
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginError").textContent="";try{const r=await api("login",{accessCode:$("accessCode").value.trim()});state.token=r.token;state.user=r.user;saveSession();showDashboard(state.user);await loadTransfers();}catch(err){$("loginError").textContent=err.message||"رمز الدخول غير صحيح";otpDigits.forEach(x=>x.classList.add("otp-invalid"));setTimeout(()=>otpDigits.forEach(x=>x.classList.remove("otp-invalid")),900);}});
+$("loginForm").addEventListener("submit",e=>{e.preventDefault();submitOtpLogin();});
 document.addEventListener("click",e=>{const home=e.target.closest("[data-home]");if(home){$("contentPanel").classList.add("hidden");state.view="";document.querySelectorAll(".sidebar-link").forEach(x=>x.classList.remove("active"));home.classList.add("active");}const v=e.target.closest("[data-view]");if(v){openView(v.dataset.view);document.querySelectorAll(".sidebar-link").forEach(x=>x.classList.toggle("active",x===v));}const d=e.target.closest("[data-detail]");if(d)showDetail(d.dataset.detail);const rv=e.target.closest("[data-review]");if(rv){const t=state.transfers.find(x=>x.transferId===rv.dataset.review);if(t)showDetail(t.transferId).then(()=>reviewActions(t));}const ed=e.target.closest("[data-edit]");if(ed)editTransfer(ed.dataset.edit);const er=e.target.closest("[data-edit-returned]");if(er)editReturnedTransfer(er.dataset.editReturned);const del=e.target.closest("[data-delete]");if(del)deleteTransfer(del.dataset.delete);});
 $("backBtn").onclick=()=>{$("contentPanel").classList.add("hidden");state.view="";};$("refreshBtn").onclick=()=>loadTransfers().then(()=>toast("تم تحديث البيانات")).catch(e=>toast(e.message));$("logoutBtn").onclick=async()=>{try{await api("logout")}catch(_){}showLogin();$("accessCode").value="";toast("تم تسجيل الخروج");};
 (async function restoreSession(){let saved=null;try{saved=JSON.parse(sessionStorage.getItem("ghaymPortalSession")||"null");}catch(_){}if(!saved?.token||!saved?.user)return;state.token=saved.token;state.user=saved.user;showDashboard(saved.user);try{await loadTransfers();}catch(_){showLogin();}})();
