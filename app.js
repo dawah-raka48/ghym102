@@ -75,7 +75,12 @@ function syncOtp(){
  $("otpStatus").textContent=code.length===4?"جاري فتح القفل…":"أدخل الأرقام الأربعة للمتابعة";
  otpDigits.forEach(el=>el.classList.toggle("filled",!!el.value));
 }
-function focusOtp(index){requestAnimationFrame(()=>{const el=otpDigits[index];if(el){el.focus();el.select?.();}});}
+function focusOtp(index){
+ const target=otpDigits[index];
+ if(!target)return;
+ target.focus();
+ try{target.setSelectionRange(target.value.length,target.value.length);}catch(_){}
+}
 function clearOtpFields(){
  otpDigits.forEach(x=>{x.value="";x.classList.remove("filled","otp-invalid");});
  $("accessCode").value="";
@@ -86,7 +91,7 @@ function clearOtpFields(){
 async function submitOtpLogin(){
  if(otpSubmitting)return;
  const code=otpDigits.map(x=>x.value).join("");
- if(!/^\d{4}$/.test(code))return;
+ if(!/^[0-9]{4}$/.test(code))return;
  otpSubmitting=true;
  const card=$("loginForm");
  card.classList.remove("otp-unlock","otp-error-shake");
@@ -110,14 +115,7 @@ async function submitOtpLogin(){
 }
 otpDigits.forEach((el,index)=>{
  el.addEventListener("input",()=>{
-  const digits=el.value.replace(/\\D/g,"");
-  if(digits.length>1){
-   const chars=digits.slice(0,4).split("");
-   chars.forEach((digit,i)=>{if(otpDigits[i])otpDigits[i].value=digit;});
-   syncOtp();
-   if(chars.length===4)submitOtpLogin();else focusOtp(Math.min(chars.length,3));
-   return;
-  }
+  const digits=el.value.replace(/[^0-9]/g,"");
   el.value=digits.slice(-1);
   syncOtp();
   if(el.value&&index<3)focusOtp(index+1);
@@ -134,7 +132,7 @@ otpDigits.forEach((el,index)=>{
   if(e.key==="Enter"){e.preventDefault();submitOtpLogin();}
  });
  el.addEventListener("paste",e=>{
-  const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/\\D/g,"").slice(0,4);
+  const pasted=(e.clipboardData||window.clipboardData).getData("text").replace(/[^0-9]/g,"").slice(0,4);
   if(!pasted)return;
   e.preventDefault();
   otpDigits.forEach((input,i)=>input.value=pasted[i]||"");
