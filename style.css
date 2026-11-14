@@ -428,3 +428,36 @@ input,select,textarea{font-weight:500}
 .otp-brand-mark.logo-image{background:#fff;border:1px solid #e1ecef;padding:5px;object-fit:contain}
 .hero-logo-image{width:100%;height:100%;object-fit:contain;padding:13px;border-radius:inherit;background:#fff}
 .hero-emblem:has(.hero-logo-image){background:#fff;transform:none;padding:0;overflow:hidden}
+
+
+/* Refined new-transfer form */
+.transfer-form{overflow:hidden}
+.transfer-form-banner{min-height:132px;border-radius:17px;padding:24px 28px;margin:0 0 24px;background:radial-gradient(circle at 8% 110%,rgba(255,255,255,.25) 0 90px,transparent 91px),linear-gradient(110deg,#dff3f5 0%,#0b7885 52%,#075064 100%);display:flex;align-items:center;justify-content:space-between;gap:20px;color:#fff;position:relative;overflow:hidden}
+.transfer-form-banner:after{content:"";position:absolute;width:240px;height:240px;border:1px solid rgba(255,255,255,.18);border-radius:50%;left:12%;top:-155px;box-shadow:0 0 0 22px rgba(255,255,255,.06),0 0 0 45px rgba(255,255,255,.04)}
+.transfer-banner-copy{position:relative;z-index:1}
+.transfer-kicker{font-size:10px;letter-spacing:2px;font-weight:800;color:#d8f4ed}
+.transfer-banner-copy h3{font-size:25px;margin:7px 0 5px;color:#fff}
+.transfer-banner-copy p{font-size:12px;margin:0;color:#e0f1f2}
+.transfer-banner-icon{width:66px;height:66px;flex:0 0 66px;border-radius:19px;background:rgba(255,255,255,.88);display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,35,49,.15);position:relative;z-index:1}
+.transfer-banner-icon svg{width:37px;height:37px;fill:none;stroke:#087c83;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.transfer-fields{gap:20px 18px;padding:0 6px}
+.transfer-fields .field label{display:flex;align-items:center;gap:8px;font-size:13px;color:#23495a;margin-bottom:9px}
+.transfer-fields .field label b{color:#0a8584}
+.field-symbol{width:25px;height:25px;border-radius:8px;background:#e8f5f4;color:#07858a;display:inline-grid;place-items:center;font-size:16px}
+.transfer-fields .field input:not([type=file]),.transfer-fields .field textarea{min-height:48px;background:#fbfdfe;border:1px solid #d6e5ec;border-radius:12px;padding:13px 15px}
+.transfer-fields .field textarea{min-height:94px}
+.transfer-fields .field input:focus,.transfer-fields .field textarea:focus{background:#fff;border-color:#3a9a9a;box-shadow:0 0 0 4px rgba(10,137,137,.09)}
+.optional-label{margin-right:auto!important;font-size:10px!important;font-weight:500!important;color:#93a3ad!important}
+.receipt-upload{min-height:82px;border:1.5px dashed #a9cbd5;border-radius:13px;background:#f6fbfd;display:flex;align-items:center;gap:13px;padding:13px 16px;position:relative;transition:.2s}
+.receipt-upload:hover,.receipt-upload.has-file{border-color:#168f91;background:#eff9f8}
+.receipt-upload-icon{width:42px;height:42px;border-radius:13px;background:#e0f2f3;color:#07858a;display:grid;place-items:center;font-size:26px;font-weight:700;flex:0 0 42px}
+.receipt-upload-copy{min-width:0;flex:1}
+.receipt-upload-copy strong{display:block;font-size:12px;color:#285264;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.receipt-upload-copy small{display:block;font-size:10px;color:#8196a1;margin-top:5px}
+.receipt-upload input[type=file]{max-width:145px;border:0;background:transparent;padding:0;font-size:10px;color:#456273}
+.receipt-upload input[type=file]::file-selector-button{border:0;border-radius:8px;background:#dff1f2;color:#08777d;padding:9px 11px;margin-left:7px;font:700 10px inherit;cursor:pointer}
+.transfer-actions{border-top:1px solid #edf2f4;margin-top:23px;padding:19px 6px 2px;align-items:center}
+.transfer-submit{min-height:48px;padding:0 22px;border-radius:12px;background:linear-gradient(100deg,#078c8d,#07566c);box-shadow:0 8px 18px rgba(7,105,117,.17);display:inline-flex;align-items:center;gap:12px}
+.transfer-submit span{font-size:17px}
+.transfer-reset{min-height:48px;padding:0 19px;border-radius:12px;display:inline-flex;align-items:center;gap:9px}
+@media(max-width:700px){.transfer-form-banner{padding:19px 17px;min-height:116px;margin-bottom:20px}.transfer-banner-copy h3{font-size:21px}.transfer-banner-copy p{font-size:11px;line-height:1.7}.transfer-banner-icon{width:52px;height:52px;flex-basis:52px;border-radius:15px}.transfer-banner-icon svg{width:30px;height:30px}.transfer-fields{padding:0;gap:15px}.receipt-upload{flex-wrap:wrap}.receipt-upload input[type=file]{max-width:100%;width:100%}.transfer-actions{padding:15px 0 0}.transfer-submit{width:100%;justify-content:center}.transfer-reset{width:100%;justify-content:center}}
